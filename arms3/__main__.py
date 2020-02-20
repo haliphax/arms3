@@ -9,18 +9,12 @@ from time import time
 # 3rd party
 import click
 # local
-from . import app, get_agent, root
-
-
-def _agent_filename(id):
-    "Get filename for given agent ID"
-
-    return join(root, 'agents', '{}.json'.format(id))
+from . import agent_filename, app, get_agent, root
 
 
 @click.group()
 def cli():
-    "Command line interface group"
+    "ARMS/3 command line interface"
 
 
 @cli.command()
@@ -45,7 +39,7 @@ def clean():
 @cli.command()
 @click.argument('id')
 def get(id):
-    'Get agent information given character ID'
+    "Get agent information given character ID"
 
     agent = get_agent(id)
 
@@ -61,10 +55,10 @@ def get(id):
 @click.argument('id')
 @click.argument('key')
 def create(id, key):
-    'Create agent file with given character ID and auth key'
+    "Create agent file with given character ID and auth key"
 
     id = int(id)
-    fname = _agent_filename(id)
+    fname = agent_filename(id)
 
     if isfile(fname):
         print('Agent file already exists')
@@ -82,9 +76,9 @@ def create(id, key):
 @cli.command()
 @click.argument('id')
 def remove(id):
-    'Remove agent file with given ID'
+    "Remove agent file with given character ID"
 
-    fname = _agent_filename(id)
+    fname = agent_filename(id)
 
     if not isfile(fname):
         print('Agent file does not exist')

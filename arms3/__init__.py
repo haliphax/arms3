@@ -33,10 +33,22 @@ def login_required(func, *args, **kwargs):
     return wrap
 
 
+def agent_filename(id):
+    "Get filename for given agent ID"
+
+    return join(root, 'agents', '{}.json'.format(id))
+
+
+def report_filename(xy):
+    "Get filename for given report"
+
+    return join(root, 'reports', '{}.json'.format(xy))
+
+
 def get_agent(id):
     "Pull agent information from file"
 
-    fname = join(root, 'agents', '{}.json'.format(id))
+    fname = agent_filename(id)
 
     if not isfile(fname):
         return None
@@ -48,7 +60,7 @@ def get_agent(id):
 def get_report(xy):
     "Pull report information for given coords from file"
 
-    fname = join(root, 'reports', '{}.json'.format(xy))
+    fname = report_filename(xy)
 
     if not isfile(fname):
         return None
@@ -101,7 +113,7 @@ def post():
     split = coords.split('-')
     x, y = int(split[0]), int(split[1])
 
-    with open(join(root, 'reports', '{}-{}.json'.format(x, y)), 'w') as f:
+    with open(report_filename('{}-{}'.format(x, y)), 'w') as f:
         f.write(json.dumps(report))
 
     return get(coords)
