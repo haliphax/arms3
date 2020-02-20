@@ -24,8 +24,11 @@ function checkForConfig() {
 	var $arms3 = $('#arms3');
 
 	if ($arms3.length === 1) {
-		arms3(JSON.parse($arms3.val()));
+		var data = JSON.parse($arms3.val());
+
 		clearTimeout(t);
+		$arms3.remove();
+		arms3(data);
 	}
 }
 
