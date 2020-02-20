@@ -2,14 +2,14 @@
 
 # stdlib
 import json
-from os.path import dirname, getmtime, isfile, join
+from os.path import abspath, dirname, getmtime, isfile, join
 # 3rd party
 from flask import Flask, g, jsonify, request
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 app = Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app)
-root = join(dirname(__file__), '..')
+root = abspath(join(dirname(__file__), '..'))
 
 
 def login_required(func, *args, **kwargs):
