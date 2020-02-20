@@ -1,0 +1,6 @@
+**/__pycache__/
+agents/*.json
+reports/*.json
+clean.log
+config.py
+cron.sh
