@@ -55,7 +55,7 @@ function arms3(data) {
 		<style> \
 			/* Base styles */ \
 			.arms3 { display: block; font-size: 8pt; font-family: sans-serif; } \
-			.arms3 > * { padding: .1em; margin-right: .2em; border: 1px solid #000; } \
+			.arms3 > * { color: #fff; background-color: #000; padding: .1em; margin-right: .2em; border: 1px solid #fff; } \
 			/* Freshness */ \
 			.arms3.brandnew { opacity: 1; } \
 			.arms3.new { opacity: .8; } \
@@ -64,15 +64,15 @@ function arms3(data) {
 			.arms3.old { opacity: .2 } \
 			.arms3.dead { opacity: .1 } \
 			/* Barricades */ \
-			.arms3 .cades { background-color: #fff; } \
+			.arms3 .cades { background-color: #000; border-color: #fff; } \
 			.arms3 .cades.Opn, .arms3 .cades.Cls { color: Red; } \
-			.arms3 .cades.LoB, .arms3 .cades.LiB, .arms3 .cades.QSB { color: Orange; } \
-			.arms3 .cades.VSB { color: Yellow; } \
-			.arms3 .cades.VHB, .arms3 .cades.EHB { color: Green; } \
+			.arms3 .cades.LoB, .arms3 .cades.LiB, .arms3 .cades.SB { color: Orange; } \
+			.arms3 .cades.QSB, .arms3 .cades.VSB { color: Yellow; } \
+			.arms3 .cades.HB, .arms3 .cades.VHB, .arms3 .cades.EHB { color: Green; } \
 			/* Ruin/repair */ \
 			.arms3 .ruin { background-color: #c00; color: #fff; } \
 			/* Generators */ \
-			.arms3 .genny { background-color: #000; color: #fff; } \
+			.arms3 .genny { border-style: dotted; } \
 			.arms3 .genny.E { color: Red; } \
 			.arms3 .genny.VL { color: Orange; } \
 			.arms3 .genny.L { color: Yellow; } \
@@ -97,19 +97,21 @@ function arms3(data) {
 	var cades = /(quite|very|extremely)? ?(?:(loosely|lightly)|(strongly|heavily)) b|wide (open)|is (closed)/i.exec(text);
 
 	if (cades) {
+		report.cades = '';
+
 		// Q/V/E
-		if (cades[1]) report.cades = cades[1][0].toUpperCase();
+		if (cades[1]) report.cades += cades[1][0].toUpperCase();
 		// Lo/Li
-		else if (cades[2]) report.cades = (cades[2] == 'loosely' ? 'Lo' : 'Li');
+		else if (cades[2]) report.cades += (cades[2] == 'loosely' ? 'Lo' : 'Li');
 
 		// S/H
 		if (cades[3]) report.cades += cades[3][0].toUpperCase();
 
 		// door
-		if (cades[4]) report.cades = 'Opn';
-		else if (cades[5]) report.cades = 'Cls';
+		if (cades[4]) report.cades += 'Opn';
+		else if (cades[5]) report.cades += 'Cls';
 
-		if (report.cades.length == 2) report.cades += 'B';
+		if (report.cades.length < 3) report.cades += 'B';
 	}
 
 	var ruin = !!(/(?:been|fallen into) ruin/.exec(text));
@@ -120,7 +122,7 @@ function arms3(data) {
 		if (cost)
 			report.ruin = Math.round(cost[0]);
 		else
-		report.ruin = -1;
+			report.ruin = -1;
 	}
 	else
 		report.ruin = 0;
