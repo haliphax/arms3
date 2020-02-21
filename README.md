@@ -2,6 +2,15 @@
 
 Assisted Reconnaissance Mission System Mk. III
 
+## To do
+
+ARMS/3 is a work in progress. The following features are planned for the
+immediate future:
+
+- [ ] Report location of zeds in surrounding tiles when outdoors
+- [ ] Integrate with [external map site](http://map.dssrzs.org) for larger
+  display
+
 ## Report data
 
 ### Barricade/door status
