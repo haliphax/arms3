@@ -43,7 +43,7 @@ dotted white border.
 If zombies are spotted on a tile, their number is recorded along with whether
 they were spotted inside or outside. When on display, the interior zed count
 will be prefixed with `I:` and the exterior zed count will be prefixed with
-`O:`. If there were 2 zeds insisde and 1 outside, you would see `I:2 O:1`.
+`O:`. If there were 2 zeds inside and 1 outside, you would see `I:2 O:1`.
 This data is in a green box with black text. Interior zed count will not be
 visible for the current tile if the player is indoors, and exterior zed count
 will not be visible if the player is outdoors (since the game UI should already
