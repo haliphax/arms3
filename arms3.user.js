@@ -65,18 +65,18 @@ function arms3(data) {
 			.arms3.dead { opacity: .1 } \
 			/* Barricades */ \
 			.arms3 .cades { background-color: #000; border-color: #fff; } \
-			.arms3 .cades.Opn, .arms3 .cades.Cls { color: Red; } \
+			.arms3 .cades.Opn, .arms3 .cades.Cls { color: #f00; } \
 			.arms3 .cades.LoB, .arms3 .cades.LiB { color: Orange; } \
 			.arms3 .cades.SB, .arms3 .cades.QSB, .arms3 .cades.VSB { color: Yellow; } \
-			.arms3 .cades.HB, .arms3 .cades.VHB, .arms3 .cades.EHB { color: Green; } \
+			.arms3 .cades.HB, .arms3 .cades.VHB, .arms3 .cades.EHB { color: #0f0; } \
 			/* Ruin/repair */ \
 			.arms3 .ruin { background-color: #c00; color: #fff; } \
 			/* Generators */ \
 			.arms3 .genny { border-style: dotted; } \
-			.arms3 .genny.E { color: Red; } \
+			.arms3 .genny.E { color: #f00; } \
 			.arms3 .genny.VL { color: Orange; } \
 			.arms3 .genny.L { color: Yellow; } \
-			.arms3 .genny.F { color: Green; } \
+			.arms3 .genny.F { color: #0f0; } \
 			/* Zeds */ \
 			.arms3 .zeds { background-color: #0c0; color: #000; } \
 		</style> \
