@@ -34,17 +34,73 @@ function checkForConfig() {
 
 var t = setInterval(checkForConfig, 10);
 
+function displayData(r, coords, inside)
+{
+	if (logEnabled) console.log(r);
+
+	var now = new Date();
+	var when = new Date(r.when * 1000);
+	var age = (now - when) / 3600000;
+	var ageClass = 'brandnew';
+
+	// style based on age of report (in hours)
+	if (age >= 24)
+		ageClass = 'dead';
+	else if (age >= 12)
+		ageClass = 'old';
+	else if (age >= 6)
+		ageClass = 'stale';
+	else if (age >= 3)
+		ageClass = 'fresh';
+	else if (age >= 1)
+		ageClass = 'new';
+
+	var add = '<span class="arms3 ' + ageClass + '" title="Reported ' + when.toString() + '">';
+
+	if (r.hasOwnProperty('cades'))
+		add += '<span class="cades ' + r.cades + '">' + r.cades + '</span>';
+
+	if (r.hasOwnProperty('genny'))
+		add += '<span class="genny ' + r.genny + '">' + r.genny + '</span>';
+
+	if (r.ruin != 0)
+		add += '<span class="ruin">' + (r.ruin < 0 ? '?' : r.ruin) + '</span>';
+
+	var showAll = (typeof inside == 'undefined');
+	var zin = (r.zeds.hasOwnProperty('in') ? r.zeds.in : (showAll ? 0 : null));
+	var zout = (r.zeds.hasOwnProperty('out') ? r.zeds.out : (showAll ? 0 : null));
+
+	if (showAll
+		|| r.coords !== coords
+		|| (inside && zout !== null)
+		|| (!inside && zin !== null))
+	{
+		var zedHtml = '';
+
+		if (zin !== null && (showAll || r.coords !== coords || !inside))
+			zedHtml += 'I:' + zin + ' ';
+
+		if (zout !== null && (showAll || inside))
+			zedHtml += 'O:' + zout;
+
+		if (zedHtml.length > 0)
+			add += '<span class="zeds">' + zedHtml + '</span>';
+	}
+
+	add += '</span>';
+
+	return add;
+}
+
 function arms3(data) {
 	var currid = /\d+$/.exec($('td.cp .gt > a:first').attr('href'))[0];
 
-	if (!(!!data.chars[currid]))
-	{
+	if (!(!!data.chars[currid])) {
 		if (logEnabled) console.log('[ARMS/3] Character not configured');
 
 		return;
 	}
-	else if ($('td.cp table.c').text().indexOf('asleep') >= 0)
-	{
+	else if ($('td.cp table.c').text().indexOf('asleep') >= 0) {
 		if (logEnabled) console.log('[ARMS/3] Character is asleep');
 
 		return;
@@ -153,66 +209,16 @@ function arms3(data) {
 		onload: function(d) {
 			if (logEnabled) console.log('[ARMS/3] Report submitted');
 
-			var preport = JSON.parse(d.responseText);
+			var report = JSON.parse(d.responseText);
 
-			if (logEnabled) console.log(preport);
-
-			for (var i = 0; i < preport.length; i++) {
-				var r = preport[i];
-				var when = new Date(r.when * 1000);
-				var age = (now - when) / 3600000;
-				var ageClass = 'brandnew';
-
-				// style based on age of report (in hours)
-				if (age >= 24)
-					ageClass = 'dead';
-				else if (age >= 12)
-					ageClass = 'old';
-				else if (age >= 6)
-					ageClass = 'stale';
-				else if (age >= 3)
-					ageClass = 'fresh';
-				else if (age >= 1)
-					ageClass = 'new';
-
-				var add = '<span class="arms3 ' + ageClass + '" title="Reported ' + when.toString() + '">';
-
-				if (r.hasOwnProperty('cades'))
-					add += '<span class="cades ' + r.cades + '">' + r.cades + '</span>';
-
-				if (r.hasOwnProperty('genny'))
-					add += '<span class="genny ' + r.genny + '">' + r.genny + '</span>';
-
-				if (r.ruin != 0)
-					add += '<span class="ruin">' + (r.ruin < 0 ? '?' : r.ruin) + '</span>';
-
-				var zin = (r.zeds.hasOwnProperty('in') ? r.zeds.in : null);
-				var zout = (r.zeds.hasOwnProperty('out') ? r.zeds.out : null);
-
-				if (r.coords !== coords
-					|| (inside && zout !== null)
-					|| (!inside && zin !== null))
-				{
-					var zedHtml = '';
-
-					if (zin !== null && (r.coords !== coords || !inside))
-						zedHtml += 'I:' + zin + ' ';
-
-					if (zout !== null && inside)
-						zedHtml += 'O:' + zout;
-
-					if (zedHtml.length > 0)
-						add += '<span class="zeds">' + zedHtml + '</span>';
-				}
-
-				add += '</span>';
-
-				var $btn = $('td.cp table.c input[name="v"][value="' + r.coords + '"]');
+			for (var i = 0; i < report.length; i++) {
+				var html = displayData(report[i], coords, inside);
+				var $btn = $('td.cp table.c input[name="v"][value="' + report[i].coords + '"]');
 
 				if ($btn.length == 0)
-					$(add).insertBefore($('td.cp table.c tr:nth-child(3) td:nth-child(2) input'));
+					$(html).insertBefore($('td.cp table.c tr:nth-child(3) td:nth-child(2) input'));
 				else
-					$(add).insertBefore($btn);
+					$(html).insertBefore($btn);
 			}
 		}
 	});
