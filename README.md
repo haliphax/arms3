@@ -14,7 +14,7 @@ solid white border.
 - **Cls** - (Red) The doors to the street are closed
 - **LoB** - (Orange) Loosely barricaded
 - **LiB** - (Orange) Lightly barricaded
-- **SB** - (Orange) Strongly barricaded
+- **SB** - (Yellow) Strongly barricaded
 - **QSB** - (Yellow) Quite strongly barricaded
 - **VSB** - (Yellow) Very strongly barricaded
 - **HB** - (Green) Heavily barricaded

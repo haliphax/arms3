@@ -66,8 +66,8 @@ function arms3(data) {
 			/* Barricades */ \
 			.arms3 .cades { background-color: #000; border-color: #fff; } \
 			.arms3 .cades.Opn, .arms3 .cades.Cls { color: Red; } \
-			.arms3 .cades.LoB, .arms3 .cades.LiB, .arms3 .cades.SB { color: Orange; } \
-			.arms3 .cades.QSB, .arms3 .cades.VSB { color: Yellow; } \
+			.arms3 .cades.LoB, .arms3 .cades.LiB { color: Orange; } \
+			.arms3 .cades.SB, .arms3 .cades.QSB, .arms3 .cades.VSB { color: Yellow; } \
 			.arms3 .cades.HB, .arms3 .cades.VHB, .arms3 .cades.EHB { color: Green; } \
 			/* Ruin/repair */ \
 			.arms3 .ruin { background-color: #c00; color: #fff; } \
