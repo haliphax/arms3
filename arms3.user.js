@@ -15,6 +15,35 @@ var logEnabled = true;
 //--- DO NOT EDIT BELOW THIS LINE ---//
 
 var version = '0.1';
+var stylesheet = '\
+	<style> \
+		/* Base styles */ \
+		.arms3 { display: block; font-size: 8pt; font-family: sans-serif; } \
+		.arms3 > * { color: #fff; background-color: #000; padding: .1em; margin-right: .2em; border: 1px solid #fff; } \
+		/* Freshness */ \
+		.arms3.brandnew { opacity: 1; } \
+		.arms3.new { opacity: .8; } \
+		.arms3.fresh { opacity: .7; } \
+		.arms3.stale { opacity: .6; } \
+		.arms3.old { opacity: .5 } \
+		.arms3.dead { opacity: .4 } \
+		/* Barricades */ \
+		.arms3 .cades { background-color: #000; border-color: #fff; } \
+		.arms3 .cades.Opn, .arms3 .cades.Cls { color: #f00; } \
+		.arms3 .cades.LoB, .arms3 .cades.LiB { color: Orange; } \
+		.arms3 .cades.SB, .arms3 .cades.QSB, .arms3 .cades.VSB { color: Yellow; } \
+		.arms3 .cades.HB, .arms3 .cades.VHB, .arms3 .cades.EHB { color: #0f0; } \
+		/* Ruin/repair */ \
+		.arms3 .ruin { background-color: #c00; color: #fff; } \
+		/* Generators */ \
+		.arms3 .genny { border-style: dotted; } \
+		.arms3 .genny.E { color: #f00; } \
+		.arms3 .genny.VL { color: Orange; } \
+		.arms3 .genny.L { color: Yellow; } \
+		.arms3 .genny.F { color: #0f0; } \
+		/* Zeds */ \
+		.arms3 .zeds { background-color: #0c0; color: #000; } \
+	</style>';
 
 function checkForConfig() {
 	var $arms3 = $('#arms3');
@@ -32,8 +61,6 @@ var t = setInterval(checkForConfig, 10);
 
 function displayData(r, coords, inside)
 {
-	if (logEnabled) console.log(r);
-
 	var now = new Date();
 	var when = new Date(r.when * 1000);
 	var age = (now - when) / 3600000;
@@ -104,37 +131,6 @@ function arms3(data) {
 
 	if (logEnabled) console.log('[ARMS/3] Character: ' + currid);
 
-	$('body').append(' \
-		<style> \
-			/* Base styles */ \
-			.arms3 { display: block; font-size: 8pt; font-family: sans-serif; } \
-			.arms3 > * { color: #fff; background-color: #000; padding: .1em; margin-right: .2em; border: 1px solid #fff; } \
-			/* Freshness */ \
-			.arms3.brandnew { opacity: 1; } \
-			.arms3.new { opacity: .8; } \
-			.arms3.fresh { opacity: .7; } \
-			.arms3.stale { opacity: .6; } \
-			.arms3.old { opacity: .5 } \
-			.arms3.dead { opacity: .4 } \
-			/* Barricades */ \
-			.arms3 .cades { background-color: #000; border-color: #fff; } \
-			.arms3 .cades.Opn, .arms3 .cades.Cls { color: #f00; } \
-			.arms3 .cades.LoB, .arms3 .cades.LiB { color: Orange; } \
-			.arms3 .cades.SB, .arms3 .cades.QSB, .arms3 .cades.VSB { color: Yellow; } \
-			.arms3 .cades.HB, .arms3 .cades.VHB, .arms3 .cades.EHB { color: #0f0; } \
-			/* Ruin/repair */ \
-			.arms3 .ruin { background-color: #c00; color: #fff; } \
-			/* Generators */ \
-			.arms3 .genny { border-style: dotted; } \
-			.arms3 .genny.E { color: #f00; } \
-			.arms3 .genny.VL { color: Orange; } \
-			.arms3 .genny.L { color: Yellow; } \
-			.arms3 .genny.F { color: #0f0; } \
-			/* Zeds */ \
-			.arms3 .zeds { background-color: #0c0; color: #000; } \
-		</style> \
-	');
-
 	var now = new Date();
 	var text = $('td.gp .gt').text();
 	var auth = {
@@ -184,17 +180,19 @@ function arms3(data) {
 	else
 		report.ruin = 0;
 
-	var genny = /generator has been set up here.\s*(?:It (?:(is out)|(only)|(is running low)))?/.exec(text);
+	if (inside) {
+		var genny = /generator has been set up here.\s*(?:It (?:(is out)|(only)|(is running low)))?/.exec(text);
 
-	if (genny) {
-		if (genny[1])
-			report.genny = 'E';
-		else if (genny[2])
-			report.genny = 'VL';
-		else if (genny[3])
-			report.genny = 'L';
-		else
-			report.genny = 'F';
+		if (genny) {
+			if (genny[1])
+				report.genny = 'E';
+			else if (genny[2])
+				report.genny = 'VL';
+			else if (genny[3])
+				report.genny = 'L';
+			else
+				report.genny = 'F';
+		}
 	}
 
 	var zeds = 0;
@@ -205,7 +203,7 @@ function arms3(data) {
 	report.zeds[inside ? 'in' : 'out'] = zeds;
 	reports.push(report);
 
-	// gather zed counts from surrounding area if outside
+	// gather info (zeds, lights) from surrounding area if outside
 	if (!inside)
 		$('table.c input[type="hidden"]').each(function () {
 			var hasZeds = /\d+/.exec($(this).closest('td').find('.fz').text());
@@ -232,6 +230,8 @@ function arms3(data) {
 				console.log('[ARMS/3] Intel:');
 				console.log(intel);
 			}
+
+			$('body').append(stylesheet);
 
 			for (var i = 0; i < intel.length; i++) {
 				var html = displayData(intel[i], coords, inside);
