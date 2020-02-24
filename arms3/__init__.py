@@ -72,17 +72,19 @@ def get_report(xy):
         return r
 
 
-@app.route('/report/<xy>', methods=('GET',))
+@app.route('/report/<tl>/<br>', methods=('GET',))
 @login_required
-def get(xy):
+def get(tl, br):
     "Request report information for surrounding area given coords"
 
-    split = xy.split('-')
-    x, y = int(split[0]), int(split[1])
+    split = tl.split('-')
+    top_left = [int(split[0]), int(split[1])]
+    split = br.split('-')
+    bottom_right = [int(split[0]), int(split[1])]
     reports = []
 
-    for i in range(x - 1, x + 2):
-        for j in range(y - 1, y + 2):
+    for i in range(top_left[0], bottom_right[0] + 1):
+        for j in range(top_left[1], bottom_right[1] + 1):
             report = get_report('{}-{}'.format(i, j))
 
             if report is not None:
@@ -97,6 +99,8 @@ def post():
     "Submit report information"
 
     data = json.loads(request.data.decode('utf-8'))
+    tl = [None, None]
+    br = [None, None]
 
     for d in data:
         d['agent'] = g.id
@@ -115,7 +119,25 @@ def post():
         split = coords.split('-')
         x, y = int(split[0]), int(split[1])
 
+        if tl[0] is None or x < tl[0]:
+            tl[0] = x
+
+        if tl[1] is None or y < tl[1]:
+            tl[1] = y
+
+        if br[0] is None or x > br[0]:
+            br[0] = x
+
+        if br[1] is None or y > br[1]:
+            br[1] = y
+
         with open(report_filename('{}-{}'.format(x, y)), 'w') as f:
             f.write(json.dumps(report))
 
-    return get(coords)
+    if tl[0] == br[0] and tl[1] == br[1]:
+        tl[0] -= 1
+        tl[1] -= 1
+        br[0] += 1
+        br[1] += 1
+
+    return get('-'.join(tl), '-'.join(br))
