@@ -8,7 +8,7 @@
 // ==/UserScript==
 
 var data = {
-	configVersion: '0.1',
+	configVersion: GM.info.script.version,
 	chars: {
 		'CharacterIdGoesHere': {
 			url: 'http://url.for.arms3.server',

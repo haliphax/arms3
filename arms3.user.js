@@ -3,6 +3,7 @@
 // @author haliphax (https://roadha.us)
 // @version 0.1
 // @include http://*urbandead.com/map.cgi*
+// @include http://map.dssrzs.org/*
 // @exclude http://*urbandead.com/map.cgi?log*
 // @namespace https://roadha.us
 // @description Scouting utility for Urban Dead; report status of barricades/doors, generators, and zombies
@@ -14,12 +15,11 @@ var logEnabled = true;
 
 //--- DO NOT EDIT BELOW THIS LINE ---//
 
-var version = '0.1';
 var stylesheet = '\
 	<style> \
 		/* Base styles */ \
 		.arms3 { display: block; font-size: 8pt; font-family: sans-serif; } \
-		.arms3 > * { color: #fff; background-color: #000; padding: .1em; margin-right: .2em; border: 1px solid #fff; } \
+		.arms3 > * { color: #fff; background-color: #000; padding: 1px; margin-right: 1px; border: 1px solid #fff; } \
 		/* Freshness */ \
 		.arms3.brandnew { opacity: 1; } \
 		.arms3.new { opacity: .8; } \
@@ -116,6 +116,55 @@ function displayData(r, coords, inside)
 }
 
 function arms3(data) {
+	if (document.location.host == 'map.dssrzs.org')
+		dssrzs(data);
+	else
+		ud(data);
+}
+
+function dssrzs(data) {
+	if ($('.map-container .map').length == 0)
+		return;
+
+	var currid = null;
+
+	for (var k in data.chars) {
+		currid = k;
+		break;
+	}
+
+	var auth = {
+		'X-ARMS3-Key': currid + ':' + data.chars[currid].key,
+		'X-ARMS3-Version': GM.info.script.version
+	};
+	var tl = $('.map td:first .loc .p').text().replace(',', '-');
+	var br = $('.map td:last .loc .p').text().replace(',', '-');
+
+	GM.xmlHttpRequest({
+		headers: auth,
+		method: 'GET',
+		url: data.chars[currid].url + '/report/' + tl + '/' + br,
+		onload: function(d) {
+			var intel = JSON.parse(d.responseText);
+
+			if (logEnabled) {
+				console.log('[ARMS/3] Intel:');
+				console.log(intel);
+			}
+
+			$('body').append(stylesheet);
+
+			for (var i = 0; i < intel.length; i++) {
+				var html = displayData(intel[i]);
+				var split = intel[i].coords.split('-');
+
+				$(html).insertBefore($('#x' + split[0] + 'y' + split[1] + ' .loc .n'));
+			}
+		}
+	});
+}
+
+function ud(data) {
 	var currid = /\d+$/.exec($('td.cp .gt > a:first').attr('href'))[0];
 
 	if (!(!!data.chars[currid])) {
@@ -135,7 +184,7 @@ function arms3(data) {
 	var text = $('td.gp .gt').text();
 	var auth = {
 		'X-ARMS3-Key': currid + ':' + data.chars[currid].key,
-		'X-ARMS3-Version': version
+		'X-ARMS3-Version': GM.info.script.version
 	};
 	var coords = $('input[name="homex"]').val() + '-' + $('input[name="homey"]').val();
 	var reports = [];

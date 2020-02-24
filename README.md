@@ -11,8 +11,6 @@ immediate future:
   implies that it has a generator, but not any info about its fuel level, and
   spotting a ruin from the outside implies that it is ruined, but does not
   convey its repair cost)
-- Integrate with [external map site](http://map.dssrzs.org) for larger
-  display
 
 ## Report data
 
