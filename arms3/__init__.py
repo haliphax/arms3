@@ -109,7 +109,8 @@ def post():
 
         if report is not None:
             # don't clobber ruin cost if reporting from outside
-            if 'ruin' in d and report['ruin'] > 0 and d['ruin'] == -1:
+            if ('ruin' in d and 'ruin' in report and report['ruin'] > 0
+                    and d['ruin'] == -1):
                 del d['ruin']
 
             report.update(d)
@@ -140,4 +141,4 @@ def post():
         br[0] += 1
         br[1] += 1
 
-    return get('-'.join(tl), '-'.join(br))
+    return get('{}-{}'.format(*tl), '{}-{}'.format(*br))
