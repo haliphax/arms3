@@ -10,11 +10,6 @@
 // @grant GM.xmlHttpRequest
 // ==/UserScript==
 
-/* TODO
-- if we're outside, scan all map cells for zombies
-- split "implicit" data from "explicit" data
-*/
-
 var logEnabled = true;
 
 //--- DO NOT EDIT BELOW THIS LINE ---//
@@ -64,7 +59,7 @@ function displayData(r, coords, inside)
 	if (r.hasOwnProperty('genny'))
 		add += '<span class="genny ' + r.genny + '">' + r.genny + '</span>';
 
-	if (typeof ruin !== 'undefined' && r.ruin != 0)
+	if (r.hasOwnProperty('ruin') && r.ruin != 0)
 		add += '<span class="ruin">' + (r.ruin < 0 ? '?' : r.ruin) + '</span>';
 
 	var showAll = (typeof inside == 'undefined');
@@ -117,10 +112,10 @@ function arms3(data) {
 			/* Freshness */ \
 			.arms3.brandnew { opacity: 1; } \
 			.arms3.new { opacity: .8; } \
-			.arms3.fresh { opacity: .6; } \
-			.arms3.stale { opacity: .4; } \
-			.arms3.old { opacity: .2 } \
-			.arms3.dead { opacity: .1 } \
+			.arms3.fresh { opacity: .7; } \
+			.arms3.stale { opacity: .6; } \
+			.arms3.old { opacity: .5 } \
+			.arms3.dead { opacity: .4 } \
 			/* Barricades */ \
 			.arms3 .cades { background-color: #000; border-color: #fff; } \
 			.arms3 .cades.Opn, .arms3 .cades.Cls { color: #f00; } \
@@ -153,7 +148,7 @@ function arms3(data) {
 		zeds: {}
 	};
 	var inside = (text.indexOf('You are inside') >= 0);
-	var cades = /(quite|very|extremely)? ?(?:(loosely|lightly)|(strongly|heavily)) b|wide (open)|is (closed)/i.exec(text);
+	var cades = /(quite|very|extremely)? ?(?:(loosely|lightly)|(strongly|heavily)) b|(?:wide)? (open)(?:s directly)|is (closed)/i.exec(text);
 
 	if (cades) {
 		report.cades = '';
@@ -173,13 +168,16 @@ function arms3(data) {
 		if (report.cades.length < 3) report.cades += 'B';
 	}
 
-	var ruin = !!(/(?:been|fallen into) ruin/.exec(text));
+	var ruin = !!(/(?:been|fallen into) ruin|ransacked/.exec(text));
 
 	if (ruin) {
-		var cost = /\d+/.exec($('.gp form[action$="map.cgi?repair"]').text());
+		var $repair = $('.gp form[action$="map.cgi?repair"]');
+		var cost = /\d+/.exec($repair.text());
 
 		if (cost)
 			report.ruin = Math.round(cost[0]);
+		else if ($repair.length > 0)
+			report.ruin = 1;
 		else
 			report.ruin = -1;
 	}
@@ -189,10 +187,14 @@ function arms3(data) {
 	var genny = /generator has been set up here.\s*(?:It (?:(is out)|(only)|(is running low)))?/.exec(text);
 
 	if (genny) {
-		if (genny[1]) report.genny = 'E';
-		else if (genny[2]) report.genny = 'VL';
-		else if (genny[3]) report.genny = 'L';
-		else report.genny = 'F';
+		if (genny[1])
+			report.genny = 'E';
+		else if (genny[2])
+			report.genny = 'VL';
+		else if (genny[3])
+			report.genny = 'L';
+		else
+			report.genny = 'F';
 	}
 
 	var zeds = 0;
@@ -211,7 +213,10 @@ function arms3(data) {
 			reports.push({ coords: $(this).val(), zeds: { out: hasZeds ? Math.round(hasZeds[0]) : 0 }});
 		});
 
-	if (logEnabled) console.log(report);
+	if (logEnabled) {
+		console.log('[ARMS/3] Report:');
+		console.log(report);
+	}
 
 	GM.xmlHttpRequest({
 		headers: auth,
@@ -221,11 +226,16 @@ function arms3(data) {
 		onload: function(d) {
 			if (logEnabled) console.log('[ARMS/3] Report submitted');
 
-			var report = JSON.parse(d.responseText);
+			var intel = JSON.parse(d.responseText);
 
-			for (var i = 0; i < report.length; i++) {
-				var html = displayData(report[i], coords, inside);
-				var $btn = $('td.cp table.c input[name="v"][value="' + report[i].coords + '"]');
+			if (logEnabled) {
+				console.log('[ARMS/3] Intel:');
+				console.log(intel);
+			}
+
+			for (var i = 0; i < intel.length; i++) {
+				var html = displayData(intel[i], coords, inside);
+				var $btn = $('td.cp table.c input[name="v"][value="' + intel[i].coords + '"]');
 
 				if ($btn.length == 0)
 					$(html).insertBefore($('td.cp table.c tr:nth-child(3) td:nth-child(2) input'));
