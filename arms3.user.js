@@ -194,26 +194,34 @@ function arms3(data) {
 				report.genny = 'F';
 		}
 	}
+	else if (/Lights are on inside./.test(text))
+		report.genny = '?';
 
-	var zeds = 0;
-	var hasZeds = /\d+/.exec($('td.cp table.c td > input').parent().find('span.fz').text());
+	var zeds = /\d+/.exec($('td.cp table.c td > input').parent().find('span.fz').text());
 
-	if (!!hasZeds) zeds = Math.round(hasZeds[0]);
-
-	report.zeds[inside ? 'in' : 'out'] = zeds;
+	report.zeds[inside ? 'in' : 'out'] = zeds ? Math.round(zeds[0]) : 0;
 	reports.push(report);
 
-	// gather info (zeds, lights) from surrounding area if outside
-	if (!inside)
-		$('table.c input[type="hidden"]').each(function () {
-			var hasZeds = /\d+/.exec($(this).closest('td').find('.fz').text());
+	// gather info (zeds, lights) from surrounding area
+	$('table.c input[type="hidden"]').each(function () {
+		var surr = { coords: $(this).val() };
 
-			reports.push({ coords: $(this).val(), zeds: { out: hasZeds ? Math.round(hasZeds[0]) : 0 }});
-		});
+		// building is lit
+		if ($(this).closest('td').find('input.ml').length > 0)
+			surr.genny = '?';
+
+		if (!inside) {
+			var zeds = /\d+/.exec($(this).closest('td').find('.fz').text());
+
+			surr.zeds = { out: zeds ? Math.round(zeds[0]) : 0 };
+		}
+
+		reports.push(surr);
+	});
 
 	if (logEnabled) {
 		console.log('[ARMS/3] Report:');
-		console.log(report);
+		console.log(reports);
 	}
 
 	GM.xmlHttpRequest({

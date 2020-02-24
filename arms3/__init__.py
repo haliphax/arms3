@@ -113,6 +113,10 @@ def post():
                     and d['ruin'] == -1):
                 del d['ruin']
 
+            # don't clobber genny fuel status if reporting from outside
+            if 'genny' in d and 'genny' in report and d['genny'] == '?':
+                del d['genny']
+
             report.update(d)
         else:
             report = d
