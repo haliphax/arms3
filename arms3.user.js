@@ -12,6 +12,7 @@
 
 /* TODO
 - if we're outside, scan all map cells for zombies
+- split "implicit" data from "explicit" data
 */
 
 var logEnabled = true;
@@ -63,7 +64,7 @@ function displayData(r, coords, inside)
 	if (r.hasOwnProperty('genny'))
 		add += '<span class="genny ' + r.genny + '">' + r.genny + '</span>';
 
-	if (r.ruin != 0)
+	if (typeof ruin !== 'undefined' && r.ruin != 0)
 		add += '<span class="ruin">' + (r.ruin < 0 ? '?' : r.ruin) + '</span>';
 
 	var showAll = (typeof inside == 'undefined');
@@ -106,7 +107,8 @@ function arms3(data) {
 		return;
 	}
 
-	console.log('[ARMS/3] Character: ' + currid);
+	if (logEnabled) console.log('[ARMS/3] Character: ' + currid);
+
 	$('body').append(' \
 		<style> \
 			/* Base styles */ \
@@ -145,6 +147,7 @@ function arms3(data) {
 		'X-ARMS3-Version': version
 	};
 	var coords = $('input[name="homex"]').val() + '-' + $('input[name="homey"]').val();
+	var reports = [];
 	var report = {
 		coords: coords,
 		zeds: {}
@@ -198,12 +201,21 @@ function arms3(data) {
 	if (!!hasZeds) zeds = Math.round(hasZeds[0]);
 
 	report.zeds[inside ? 'in' : 'out'] = zeds;
+	reports.push(report);
+
+	// gather zed counts from surrounding area if outside
+	if (!inside)
+		$('table.c input[type="hidden"]').each(function () {
+			var hasZeds = /\d+/.exec($(this).closest('td').find('.fz').text());
+
+			reports.push({ coords: $(this).val(), zeds: { out: hasZeds ? Math.round(hasZeds[0]) : 0 }});
+		});
 
 	if (logEnabled) console.log(report);
 
 	GM.xmlHttpRequest({
 		headers: auth,
-		data: JSON.stringify(report),
+		data: JSON.stringify(reports),
 		method: 'POST',
 		url: data.chars[currid].url + '/report',
 		onload: function(d) {

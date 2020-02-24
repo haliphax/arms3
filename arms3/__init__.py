@@ -97,23 +97,25 @@ def post():
     "Submit report information"
 
     data = json.loads(request.data.decode('utf-8'))
-    data['agent'] = g.id
-    coords = data['coords']
-    report = get_report(coords)
 
-    if report is not None:
-        # don't clobber ruin cost if reporting from outside
-        if report['ruin'] > 0 and data['ruin'] == -1:
-            del data['ruin']
+    for d in data:
+        d['agent'] = g.id
+        coords = d['coords']
+        report = get_report(coords)
 
-        report.update(data)
-    else:
-        report = data
+        if report is not None:
+            # don't clobber ruin cost if reporting from outside
+            if 'ruin' in d and report['ruin'] > 0 and d['ruin'] == -1:
+                del d['ruin']
 
-    split = coords.split('-')
-    x, y = int(split[0]), int(split[1])
+            report.update(d)
+        else:
+            report = d
 
-    with open(report_filename('{}-{}'.format(x, y)), 'w') as f:
-        f.write(json.dumps(report))
+        split = coords.split('-')
+        x, y = int(split[0]), int(split[1])
+
+        with open(report_filename('{}-{}'.format(x, y)), 'w') as f:
+            f.write(json.dumps(report))
 
     return get(coords)

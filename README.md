@@ -7,9 +7,11 @@ Assisted Reconnaissance Mission System Mk. III
 ARMS/3 is a work in progress. The following features are planned for the
 immediate future:
 
-- [ ] Separate "implicit" and "explicit" report data (i.e. that a building is lit implies that it has a generator, but not any info about its fuel level, and spotting a ruin from the outside implies that it is ruined, but does not convey its repair cost)
-- [ ] Report location of zeds in surrounding tiles when outdoors
-- [ ] Integrate with [external map site](http://map.dssrzs.org) for larger
+- Separate "implicit" and "explicit" report data (i.e. that a building is lit
+  implies that it has a generator, but not any info about its fuel level, and
+  spotting a ruin from the outside implies that it is ruined, but does not
+  convey its repair cost)
+- Integrate with [external map site](http://map.dssrzs.org) for larger
   display
 
 ## Report data
