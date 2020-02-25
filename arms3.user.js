@@ -86,12 +86,12 @@ function displayData(r, coords, inside)
 	if (r.hasOwnProperty('genny'))
 		add += '<span class="genny ' + r.genny + '">' + r.genny + '</span>';
 
-	if (r.hasOwnProperty('ruin') && r.ruin != 0)
+	if (r.hasOwnProperty('ruin') && r.ruin !== 0)
 		add += '<span class="ruin">' + (r.ruin < 0 ? '?' : r.ruin) + '</span>';
 
 	var showAll = (typeof inside == 'undefined');
-	var zin = (r.zeds.hasOwnProperty('in') ? r.zeds.in : (showAll ? 0 : null));
-	var zout = (r.zeds.hasOwnProperty('out') ? r.zeds.out : (showAll ? 0 : null));
+	var zin = (r.hasOwnProperty('zeds') && r.zeds.hasOwnProperty('in') ? r.zeds.in : (showAll ? 0 : null));
+	var zout = (r.hasOwnProperty('zeds') && r.zeds.hasOwnProperty('out') ? r.zeds.out : (showAll ? 0 : null));
 
 	if (showAll
 		|| r.coords !== coords
@@ -123,7 +123,7 @@ function arms3(data) {
 }
 
 function dssrzs(data) {
-	if ($('.map-container .map').length == 0)
+	if ($('.map-container .map').length === 0)
 		return;
 
 	var currid = null;
@@ -294,7 +294,7 @@ function ud(data) {
 				var html = displayData(intel[i], coords, inside);
 				var $btn = $('td.cp table.c input[name="v"][value="' + intel[i].coords + '"]');
 
-				if ($btn.length == 0)
+				if ($btn.length === 0)
 					$(html).insertBefore($('td.cp table.c tr:nth-child(3) td:nth-child(2) input'));
 				else
 					$(html).insertBefore($btn);
