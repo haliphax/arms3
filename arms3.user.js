@@ -256,7 +256,7 @@ function ud(data) {
 		var surr = { coords: $(this).val() };
 
 		// building is lit
-		if ($(this).closest('td').find('input.ml').length > 0)
+		if ($(this).closest('td').find('input.ml, input.mrl').length > 0)
 			surr.genny = '?';
 
 		if (!inside) {
