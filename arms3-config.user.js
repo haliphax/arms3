@@ -3,6 +3,7 @@
 // @author haliphax (https://roadha.us)
 // @version 0.1
 // @include http://*urbandead.com/map.cgi*
+// @include http://map.dssrzs.org/*
 // @exclude http://*urbandead.com/map.cgi?log*
 // @namespace https://roadha.us
 // ==/UserScript==
