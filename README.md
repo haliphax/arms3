@@ -36,7 +36,7 @@ solid white border.
 
 ### Ruin status
 
-If a ruin is observed from the outside (i.e., the repair cost cannot be
+If a ruin is observed from the outside (i.e. the repair cost cannot be
 determined), it will show a question mark (?). Otherwise, the repair cost
 will be listed. This data is in a red box with white text.
 
