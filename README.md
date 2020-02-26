@@ -7,10 +7,13 @@ Assisted Reconnaissance Mission System Mk. III
 ARMS/3 is a work in progress. The following features are planned for the
 immediate future:
 
+- Installation and configuration instructions, screenshots, etc.
 - Separate "implicit" and "explicit" report data (i.e. that a building is lit
   implies that it has a generator, but not any info about its fuel level, and
   spotting a ruin from the outside implies that it is ruined, but does not
   convey its repair cost)
+- Detect large buildings (malls) and handle indoor reports appropriately...
+  Currently, surrounding cells are not scanned for zombies if you are indoors
 
 ## Report data
 
