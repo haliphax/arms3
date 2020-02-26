@@ -102,7 +102,7 @@ def post():
     tl = [None, None]
     br = [None, None]
 
-    for d in data:
+    for d in data['reports']:
         d['agent'] = g.id
         coords = d['coords']
         report = get_report(coords)
@@ -113,9 +113,12 @@ def post():
                     and d['ruin'] == -1):
                 del d['ruin']
 
-            # don't clobber genny fuel status if reporting from outside
             if 'genny' in d and 'genny' in report and d['genny'] == '?':
+                # don't clobber genny fuel status if reporting from outside
                 del d['genny']
+            elif data['inside'] and 'genny' not in d and 'genny' in report:
+                # erase genny from report if building doesn't have one
+                del report['genny']
 
             report.update(d)
         else:

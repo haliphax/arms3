@@ -275,7 +275,7 @@ function ud(data) {
 
 	GM.xmlHttpRequest({
 		headers: auth,
-		data: JSON.stringify(reports),
+		data: JSON.stringify({ inside: inside, reports: reports }),
 		method: 'POST',
 		url: data.chars[currid].url + '/report',
 		onload: function(d) {
