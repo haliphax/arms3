@@ -42,7 +42,7 @@ var stylesheet = '\
 		.arms3 .genny.L { color: Yellow; } \
 		.arms3 .genny.F { color: #0f0; } \
 		/* Zeds */ \
-		.arms3 .zeds { background-color: #0c0; color: #000; } \
+		.arms3 .zeds { background-color: #0c0; color: #000; font-family: monospace, monospace; } \
 	</style>';
 
 function checkForConfig() {
