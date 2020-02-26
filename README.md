@@ -40,9 +40,11 @@ will be listed. This data is in a red box with white text.
 ### Generator status
 
 If a building has a generator inside of it, its fuel level will be displayed,
-color coded according to its severity. This data is in a black box with a
-dotted white border.
+color coded according to its severity. If a lit building is spotted from the
+outside, a question mark (?) will be used instead. This data is in a black box
+with a dotted white border.
 
+- **?** - (White) Lit (fuel unknown)
 - **E** - (Red) Empty
 - **VL** - (Orange) Very low
 - **L** - (Yellow) Low
