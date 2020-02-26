@@ -38,14 +38,17 @@ solid white border.
 
 If a ruin is observed from the outside (i.e. the repair cost cannot be
 determined), it will show a question mark (?). Otherwise, the repair cost
-will be listed. This data is in a red box with white text.
+will be listed. If there is an existing report that includes the repair cost,
+it will not be overwritten by an unknown value. This data is in a red box with
+white text.
 
 ### Generator status
 
 If a building has a generator inside of it, its fuel level will be displayed,
 color coded according to its severity. If a lit building is spotted from the
-outside, a question mark (?) will be used instead. This data is in a black box
-with a dotted white border.
+outside, a question mark (?) will be used instead. If there is an existing
+report that includes the fuel level, it will not be overwritten by an unknown
+value. This data is in a black box with a dotted white border.
 
 - **?** - (White) Lit (fuel unknown)
 - **E** - (Red) Empty
