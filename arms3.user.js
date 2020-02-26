@@ -90,17 +90,17 @@ function displayData(r, coords, inside)
 		add += '<span class="ruin">' + (r.ruin < 0 ? '?' : r.ruin) + '</span>';
 
 	var showAll = (typeof inside == 'undefined');
-	var zin = (r.hasOwnProperty('zeds') && r.zeds.hasOwnProperty('in') ? r.zeds.in : (showAll ? 0 : null));
-	var zout = (r.hasOwnProperty('zeds') && r.zeds.hasOwnProperty('out') ? r.zeds.out : (showAll ? 0 : null));
+	var zin = (r.hasOwnProperty('zeds') && r.zeds.hasOwnProperty('in') ? r.zeds.in : null);
+	var zout = (r.hasOwnProperty('zeds') && r.zeds.hasOwnProperty('out') ? r.zeds.out : null);
 
 	if (showAll
-		|| r.coords !== coords
+		|| r.coords != coords
 		|| (inside && zout !== null)
 		|| (!inside && zin !== null))
 	{
 		var zedHtml = '';
 
-		if (zin !== null && (showAll || r.coords !== coords || !inside))
+		if (zin !== null && (showAll || r.coords !== coords))
 			zedHtml += 'I:' + zin + ' ';
 
 		if (zout !== null && (showAll || inside))
