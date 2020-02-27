@@ -1,6 +1,13 @@
 # ARMS/3
 
-Assisted Reconnaissance Mission System Mk. III
+**Assisted Reconnaissance Mission System Mk. III**
+
+ARMS/3 is a web service and a set of [UserScripts] designed to make group recon
+in the [Urban Dead] persistent browser-based game a less tedious and daunting
+task. Additionally, it makes taking advantage of all of that recon info more
+streamlined by integrating with the [DSSRZS Map of Malton].
+
+[Installation and configuration instructions](INSTALL.md)
 
 ## To do
 
@@ -66,3 +73,8 @@ will be prefixed with `I:` and the exterior zed count will be prefixed with
 indoors, and exterior zed count will not be visible for any tiles if the player
 is outdoors (since the game UI should already make these numbers obvious). This
 data is in a green box with black text.
+
+
+[UserScripts]: https://en.wikipedia.org/wiki/Userscript
+[Urban Dead]: http://www.urbandead.com
+[DSSRZS Map of Malton]: http://map.dssrzs.org
