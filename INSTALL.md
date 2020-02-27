@@ -14,7 +14,7 @@ recommendations:
 ## Installing the UserScripts
 
 Now that you have a browser or an extension that can run UserScripts, it's time
-to install the 2 UserScripts that ARMS/3 is compose of: the client and its
+to install the 2 UserScripts that ARMS/3 is composed of: the client and its
 configuration.
 
 ### Client
