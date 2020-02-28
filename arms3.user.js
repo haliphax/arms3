@@ -193,7 +193,7 @@ function ud(data) {
 		zeds: {}
 	};
 	var inside = (text.indexOf('You are inside') >= 0);
-	var cades = /(quite|very|extremely)? ?(?:(loosely|lightly)|(strongly|heavily)) b|(?:wide)? (open)(?:s directly)|is (closed)/i.exec(text);
+	var cades = /(quite|very|extremely)? ?(?:(loosely|lightly)|(strongly|heavily)) b|(?:wide)? (open)(?:s directly)?|is (closed)/i.exec(text);
 
 	if (cades) {
 		report.cades = '';
