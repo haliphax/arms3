@@ -193,24 +193,31 @@ function ud(data) {
 		zeds: {}
 	};
 	var inside = (text.indexOf('You are inside') >= 0);
-	var cades = /(quite|very|extremely)? ?(?:(loosely|lightly)|(strongly|heavily)) b|(?:wide)? (open)(?:s directly)?|is (closed)/i.exec(text);
+	var cades = /(quite|very|extremely)? (loosely|lightly|strongly|heavily) b/.exec(text);
+	var doors = /(?:wide)? (open)(?:s directly)?|is (closed)/i.exec(text);
 
 	if (cades) {
-		report.cades = '';
-
+	report.cades = '';
+	
 		// Q/V/E
-		if (cades[1]) report.cades += cades[1][0].toUpperCase();
+		if (cades[1])
+			report.cades += cades[1][0].toUpperCase();
+	
 		// Lo/Li
-		else if (cades[2]) report.cades += (cades[2] == 'loosely' ? 'Lo' : 'Li');
-
+		if (cades[2] && cades[2][0] == 'l')
+			report.cades += (cades[2] == 'loosely' ? 'Lo' : 'Li');
 		// S/H
-		if (cades[3]) report.cades += cades[3][0].toUpperCase();
+		else if (cades[2])
+			report.cades += cades[2][0].toUpperCase();		
 
-		// door
-		if (cades[4]) report.cades += 'Opn';
-		else if (cades[5]) report.cades += 'Cls';
-
-		if (report.cades.length < 3) report.cades += 'B';
+		if (report.hasOwnProperty('cades') && report.cades.length < 3)
+			report.cades += 'B';
+	}
+	else if (doors) {
+		if (doors[1])
+			report.cades = 'Opn';
+		else if (doors[2])
+			report.cades = 'Cls';
 	}
 
 	var ruin = !!(/(?:been|fallen into) ruin|ransacked/.exec(text));
