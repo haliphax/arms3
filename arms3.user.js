@@ -194,7 +194,7 @@ function ud(data) {
 	};
 	var inside = (text.indexOf('You are inside') >= 0);
 	var cades = /(quite|very|extremely)? (loosely|lightly|strongly|heavily) b/.exec(text);
-	var doors = /(?:wide)? (open)(?:s directly)?|is (closed)/i.exec(text);
+	var doors = /(?:wide)? (open|ragged rectangle has been cut)(?:s directly)?|is (closed)/i.exec(text);
 
 	if (cades) {
 	report.cades = '';
