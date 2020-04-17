@@ -4,7 +4,7 @@
 import json
 from os.path import abspath, dirname, getmtime, isfile, join
 # 3rd party
-from flask import Flask, g, jsonify, request
+from flask import abort, Flask, g, jsonify, request
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 app = Flask(__name__)
@@ -125,22 +125,26 @@ def post():
             report = d
 
         split = coords.split('-')
-        x, y = int(split[0]), int(split[1])
 
-        if tl[0] is None or x < tl[0]:
-            tl[0] = x
+        try:
+            x, y = int(split[0]), int(split[1])
 
-        if tl[1] is None or y < tl[1]:
-            tl[1] = y
+            if tl[0] is None or x < tl[0]:
+                tl[0] = x
 
-        if br[0] is None or x > br[0]:
-            br[0] = x
+            if tl[1] is None or y < tl[1]:
+                tl[1] = y
 
-        if br[1] is None or y > br[1]:
-            br[1] = y
+            if br[0] is None or x > br[0]:
+                br[0] = x
 
-        with open(report_filename('{}-{}'.format(x, y)), 'w') as f:
-            f.write(json.dumps(report))
+            if br[1] is None or y > br[1]:
+                br[1] = y
+
+            with open(report_filename('{}-{}'.format(x, y)), 'w') as f:
+                f.write(json.dumps(report))
+        except ValueError:
+            abort(400)
 
     if tl[0] == br[0] and tl[1] == br[1]:
         tl[0] -= 1
